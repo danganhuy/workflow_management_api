@@ -10,5 +10,5 @@ public interface IGenericService<T> {
 
     void save(T t);
 
-    void delete(T t);
+    void deleteById(Long id);
 }

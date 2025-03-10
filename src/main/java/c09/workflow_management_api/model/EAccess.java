@@ -1,5 +1,5 @@
 package c09.workflow_management_api.model;
 
-public enum Access {
+public enum EAccess {
     PUBLIC, PRIVATE;
 }

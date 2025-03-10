@@ -6,6 +6,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
 import java.util.Optional;
 
 @RestController
@@ -34,19 +35,20 @@ public class GroupController {
 
     @PostMapping()
     public ResponseEntity<?> addGroup(@RequestBody Group group) {
-        group.setId(null);
+        group.setCreated_at(LocalDateTime.now());
         groupService.save(group);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> updateGroup(@RequestBody Group group, @PathVariable Long id) {
-        group.setId(id);
-        System.out.println(group);
-        System.out.println(id);
-        if (groupService.findById(id).isEmpty()) {
+        Optional<Group> groupOptional = groupService.findById(id);
+        if (groupOptional.isEmpty()) {
             return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
+        group.setId(id);
+        group.setCreated_at(groupOptional.get().getCreated_at());
+        group.setCreated_by(groupOptional.get().getCreated_by());
         groupService.save(group);
         return new ResponseEntity<>(group, HttpStatus.OK);
     }

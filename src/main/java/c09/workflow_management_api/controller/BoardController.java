@@ -11,7 +11,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("api/boards")
-@CrossOrigin(origins = "http://localhost:5174") // Chinh theo cong React
+@CrossOrigin(origins = "http://localhost:5173") // Chinh theo cong React
 public class BoardController {
     @Autowired
     private BoardService boardService;

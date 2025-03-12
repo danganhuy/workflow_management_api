@@ -62,7 +62,7 @@ public class SecurityConfiguration {
                         auth -> auth
                                 .requestMatchers(HttpMethod.OPTIONS, "/**").permitAll()
                                 .requestMatchers("/api/**").hasRole("USER")
-                                .requestMatchers(HttpMethod.POST, "/api/auth/**").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/auth/**").permitAll()
                 )
                 .build();
     }

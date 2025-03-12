@@ -33,4 +33,9 @@ public class BoardService implements IGenericService<Board> {
     public void deleteById(Long id) {
         boardRepository.deleteById(id);
     }
+
+    // 🔹 Lọc Board theo groupId
+    public List<Board> findByGroupId(Long groupId) {
+        return boardRepository.findByGroupId(groupId);
+    }
 }

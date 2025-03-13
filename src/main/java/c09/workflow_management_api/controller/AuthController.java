@@ -20,7 +20,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin("*")
+@CrossOrigin(origins = "http://localhost:5173")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;

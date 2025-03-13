@@ -1,6 +1,7 @@
 package c09.workflow_management_api.model;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
 import jakarta.validation.constraints.Size;
@@ -18,16 +19,17 @@ public class User {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotEmpty
-    @Pattern(regexp = "^[a-zA-Z ]{1,30}$",
-            message = "Username can only have at max 30 characters and doesn't contain numbers or special characters")
+    @NotEmpty(message = "Username cannot be empty")
+    @Max(value = 30, message = "Username cannot have more than 30 character")
+    @Pattern(regexp = "^[a-zA-Z ]*$",
+            message = "Username cannot contain numbers or special characters")
     private String username;
 
-    @NotEmpty
+    @NotEmpty(message = "Password cannot be empty")
     @Size(min = 6, message = "Password must have at least 6 characters")
     private String password;
 
-    @NotEmpty
+    @NotEmpty(message = "Email cannot be empty")
     @Pattern(regexp = "^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
             message = "Email must be in correct form")
     private String email;

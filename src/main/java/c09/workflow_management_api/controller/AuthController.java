@@ -55,6 +55,7 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
+            user.setId(null);
             if (userService.findByUsername(user.getUsername()) != null) {
                 return new ResponseEntity<>("Username has been used", HttpStatus.BAD_REQUEST);
             }

@@ -4,21 +4,24 @@ import jakarta.persistence.*;
 import lombok.*;
 
 @Entity
-@Table(name = "sub_roles")
+@Table(name = "lists")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class SubRole {
+public class List {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @JoinColumn(name = "board_id", nullable = false)
+    private Board board;
 
-    @Enumerated(EnumType.STRING)
-    @Column(unique = true, nullable = false)
-    private SubRoleEnum name;
+    @Column(nullable = false)
+    private String name;
+
+    private Integer position;
 }
+

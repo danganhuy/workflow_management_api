@@ -1,5 +1,6 @@
 package c09.workflow_management_api.model;
 
+import c09.workflow_management_api.model.DTO.UserDTO;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;

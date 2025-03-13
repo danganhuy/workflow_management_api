@@ -2,14 +2,15 @@ package c09.workflow_management_api.model;
 
 import jakarta.persistence.*;
 import lombok.*;
+import java.time.Instant;
 
 @Entity
-@Table(name = "user_roles")
+@Table(name = "activity_logs")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserRole {
+public class ActivityLog {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -19,11 +20,9 @@ public class UserRole {
     @JoinColumn(name = "user_id", nullable = false)
     private User user;
 
-    @ManyToOne
-    @JoinColumn(name = "role_id", nullable = false)
-    private Role role;
+    @Column(nullable = false)
+    private String action;
 
-    @ManyToOne
-    @JoinColumn(name = "sub_role_id")
-    private SubRole subRole;
+    @Column(nullable = false, updatable = false)
+    private Instant timestamp = Instant.now();
 }

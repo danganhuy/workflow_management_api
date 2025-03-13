@@ -1,6 +1,5 @@
 package c09.workflow_management_api.service;
 
-import c09.workflow_management_api.model.DTO.GroupDTO;
 import c09.workflow_management_api.model.DTO.UserDTO;
 import c09.workflow_management_api.model.Group;
 import c09.workflow_management_api.model.GroupMember;
@@ -9,7 +8,6 @@ import c09.workflow_management_api.model.User;
 import c09.workflow_management_api.repository.IGroupMemberRepository;
 import c09.workflow_management_api.repository.IGroupRepository;
 import c09.workflow_management_api.repository.IUserRepository;
-import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

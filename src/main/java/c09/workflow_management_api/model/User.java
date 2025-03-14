@@ -1,35 +1,38 @@
 package c09.workflow_management_api.model;
 
 import jakarta.persistence.*;
-import lombok.*;
-import java.util.HashSet;
-import java.util.Set;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Pattern;
+import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+@Table(name = "tbl_user")
 @Entity
-@Table(name = "users")
-@Getter
-@Setter
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
-
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(unique = true, nullable = false)
+    @Column(nullable = false, unique = true)
+    @NotEmpty(message = "Username cannot be empty")
+    @Size(max = 30, message = "Username cannot have more than 30 character")
+    @Pattern(regexp = "^[a-zA-Z ]*$",
+            message = "Username cannot contain numbers or special characters")
+    private String username;
+
+    @Column(nullable = false)
+    @NotEmpty(message = "Password cannot be empty")
+    @Size(min = 6, message = "Password must have at least 6 characters")
+    private String password;
+
+    @Column(nullable = false, unique = true)
+    @NotEmpty(message = "Email cannot be empty")
+    @Pattern(regexp = "^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",
+            message = "Email must be in correct form")
     private String email;
-
-    @Column(nullable = false)
-    private String displayName;
-
-    private String phone;
-
-    @Column(nullable = false)
-    private String passwordHash;
-
-    private String avatarUrl;
-
-    @OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Set<UserRole> userRoles = new HashSet<>();
 }

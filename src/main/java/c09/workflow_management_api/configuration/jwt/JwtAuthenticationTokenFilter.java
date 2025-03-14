@@ -1,0 +1,54 @@
+package c09.workflow_management_api.configuration.jwt;
+
+import c09.workflow_management_api.service.security.JwtService;
+import c09.workflow_management_api.service.user.IUserService;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
+import org.springframework.web.filter.OncePerRequestFilter;
+
+import java.io.IOException;
+
+@Component
+public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
+    private final JwtService jwtService;
+
+    private final IUserService userService;
+
+    public JwtAuthenticationTokenFilter(JwtService jwtService, IUserService userService) {
+        this.jwtService = jwtService;
+        this.userService = userService;
+    }
+
+    @Override
+    protected void doFilterInternal(HttpServletRequest request,
+                                    HttpServletResponse response,
+                                    FilterChain filterChain) throws ServletException, IOException {
+        String jwt = getJwtFromRequest(request);
+        if (jwt != null && jwtService.validateJwtToken(jwt)) {
+            String username = jwtService.getUsernameFromJwtToken(jwt);
+            UserDetails userDetails = userService.loadUserByUsername(username);
+            request.setAttribute("id", userService.findByUsername(username).getId());
+            UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
+                    userDetails, null, userDetails.getAuthorities()
+            );
+            System.out.println(userDetails.getAuthorities());
+            authentication.setDetails(userDetails);
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+        }
+        filterChain.doFilter(request, response);
+    }
+
+    private String getJwtFromRequest(HttpServletRequest request) {
+        String authorization = request.getHeader("Authorization");
+        if (authorization != null && authorization.startsWith("Bearer ")) {
+            return authorization.replace("Bearer ", "");
+        }
+        return null;
+    }
+}

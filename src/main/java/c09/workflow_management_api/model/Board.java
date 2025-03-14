@@ -1,15 +1,13 @@
 package c09.workflow_management_api.model;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.persistence.*;
 import lombok.*;
 import java.time.Instant;
 
 @Entity
-@Table(name = "boards")
-@Getter
-@Setter
+@Table(name = "tbl_board")
+@Data
 @NoArgsConstructor
 @AllArgsConstructor
 public class Board {

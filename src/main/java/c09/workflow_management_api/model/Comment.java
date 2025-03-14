@@ -1,26 +1,18 @@
 package c09.workflow_management_api.model;
 
-import c09.workflow_management_api.model.type.EAccess;
 import jakarta.persistence.*;
 import lombok.Data;
 
 import java.io.Serializable;
 import java.time.LocalDateTime;
 
-@Table(name = "tbl_group")
+@Table(name = "tbl_comment")
 @Entity
 @Data
-public class Group implements Serializable {
+public class Comment implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-
-    private String name;
-
-    private String type;
-
-    @Enumerated(EnumType.STRING)
-    private EAccess access;
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime created_at;
@@ -28,6 +20,10 @@ public class Group implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(nullable = false, updatable = false)
     private User created_by;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "card_id", nullable = false, updatable = false)
+    private Card card;
 
     @Column(columnDefinition = "TEXT")
     private String description;

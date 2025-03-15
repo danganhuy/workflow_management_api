@@ -2,17 +2,18 @@ package c09.workflow_management_api.service.board;
 
 import c09.workflow_management_api.model.Board;
 import c09.workflow_management_api.repository.board.BoardRepository;
-import c09.workflow_management_api.service.IGenericService;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Optional;
 
 @Service
-public class BoardService implements IGenericService<Board> {
-    @Autowired
-    private BoardRepository boardRepository;
+public class BoardService implements IBoardService {
+    private final BoardRepository boardRepository;
+
+    public BoardService(BoardRepository boardRepository) {
+        this.boardRepository = boardRepository;
+    }
 
     @Override
     public List<Board> findAll() {

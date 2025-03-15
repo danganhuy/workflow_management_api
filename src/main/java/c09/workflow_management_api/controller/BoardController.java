@@ -14,7 +14,7 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/boards")
-@CrossOrigin(origins = "http://localhost:5173") // Chỉnh theo cổng React
+@CrossOrigin("*") // Chỉnh theo cổng React
 public class BoardController {
 
     @Autowired
@@ -23,7 +23,7 @@ public class BoardController {
     @Autowired
     private GroupService groupService;
 
-    // ✅ API Tạo Board (có groupId)
+    //  API Tạo Board (có groupId)
     @PostMapping
     public ResponseEntity<Board> createBoard(@RequestBody Board board) {
         System.out.println(" Tạo bảng mới với dữ liệu: " + board);

@@ -23,11 +23,14 @@ public class Group implements Serializable {
     private EAccess access;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime created_at = LocalDateTime.now();
+
+    @Column(insertable = false, updatable = false)
+    private Long created_by;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(nullable = false, updatable = false)
-    private User created_by;
+    @JoinColumn(name = "created_by", nullable = false, updatable = false)
+    private User created_by_info;
 
     @Column(columnDefinition = "TEXT")
     private String description;

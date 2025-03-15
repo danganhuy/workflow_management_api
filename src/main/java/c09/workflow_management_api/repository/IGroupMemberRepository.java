@@ -9,11 +9,8 @@ import java.util.List;
 import java.util.Optional;
 
 public interface IGroupMemberRepository extends JpaRepository<GroupMember, Long> {
-    Optional<GroupMember> findByGroupIdAndUserId(Long groupId, Long userId);
-    List<GroupMember> findByGroupId(Long groupId);
-    boolean existsByGroupAndUser(Group group, User user);
-    Optional<GroupMember> findByGroupAndUser(Group group, User user);
-
-
+    List<GroupMember> findById_Group_Id(Long groupId);
+    boolean existsById_GroupAndId_User(Group group, User user);
+    Optional<GroupMember> findById_GroupAndId_User(Group group, User user);
 }
 

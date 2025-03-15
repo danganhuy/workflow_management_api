@@ -20,6 +20,9 @@ public class CardFile implements Serializable {
 
     private String filePath;
 
+    @Column(insertable = false, updatable = false)
+    private Long card_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
     @JsonBackReference
     @JoinColumn(name = "card_id", nullable = false)

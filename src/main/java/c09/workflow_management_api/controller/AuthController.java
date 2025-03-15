@@ -13,6 +13,7 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
@@ -42,7 +43,8 @@ public class AuthController {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             String jwt = jwtService.generateTokenLogin(authentication);
             UserDetails userDetails = (UserDetails) authentication.getPrincipal();
-            User currentUser = userService.findByUsername(user.getUsername());
+            User currentUser = userService.findByUsername(user.getUsername())
+                    .orElseThrow(() -> new UsernameNotFoundException(user.getUsername()));
             return ResponseEntity.ok(new JwtResponse(
                     currentUser.getId(), jwt, userDetails.getUsername(),
                     userDetails.getUsername(), userDetails.getAuthorities()));
@@ -56,10 +58,10 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody User user) {
         try {
             user.setId(null);
-            if (userService.findByUsername(user.getUsername()) != null) {
+            if (userService.findByUsername(user.getUsername()).isPresent()) {
                 return new ResponseEntity<>("Username has been used", HttpStatus.BAD_REQUEST);
             }
-            if (userService.findByEmail(user.getEmail()) != null) {
+            if (userService.findByEmail(user.getEmail()).isPresent()) {
                 return new ResponseEntity<>("Email has been used", HttpStatus.BAD_REQUEST);
             }
             userService.save(user);

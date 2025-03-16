@@ -1,7 +1,7 @@
 package c09.workflow_management_api.service.board;
 
 import c09.workflow_management_api.model.Board;
-import c09.workflow_management_api.repository.board.BoardRepository;
+import c09.workflow_management_api.repository.IBoardRepository;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -9,9 +9,9 @@ import java.util.Optional;
 
 @Service
 public class BoardService implements IBoardService {
-    private final BoardRepository boardRepository;
+    private final IBoardRepository boardRepository;
 
-    public BoardService(BoardRepository boardRepository) {
+    public BoardService(IBoardRepository boardRepository) {
         this.boardRepository = boardRepository;
     }
 
@@ -35,7 +35,6 @@ public class BoardService implements IBoardService {
         boardRepository.deleteById(id);
     }
 
-    // 🔹 Lọc Board theo groupId
     public List<Board> findByGroupId(Long groupId) {
         return boardRepository.findByGroupId(groupId);
     }

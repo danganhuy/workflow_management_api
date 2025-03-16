@@ -15,5 +15,5 @@ public class GroupMember implements Serializable {
     private GroupMemberId id;
 
     @Enumerated(EnumType.STRING)
-    private EMemberType member_type;
+    private EMemberType member_type = EMemberType.MEMBER;
 }

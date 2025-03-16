@@ -35,16 +35,15 @@ public class User implements Serializable {
             message = "Email must be in correct form")
     private String email;
 
-    private String imagePath;
+    private String imagePath = "";
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime created_at = LocalDateTime.now();
 
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private String activation_key;
+    private String activation_key = "";
 
-    @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean deleted;
+    private Boolean deleted = false;
 }

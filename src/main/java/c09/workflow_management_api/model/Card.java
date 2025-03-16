@@ -1,6 +1,5 @@
 package c09.workflow_management_api.model;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -17,15 +16,16 @@ public class Card implements Serializable {
     private Long id;
 
     @Column(nullable = false, updatable = false)
-    private LocalDateTime created_at;
+    private LocalDateTime created_at = LocalDateTime.now();
+
+    @Column(insertable = false, updatable = false)
+    private Long created_by;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
-    @JoinColumn(nullable = false, updatable = false)
-    private User created_by;
+    @JoinColumn(name = "created_by", nullable = false, updatable = false)
+    private User created_by_info;
 
     @ManyToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
     @JoinColumn(name = "list_id", nullable = false, updatable = false)
     private List list;
 

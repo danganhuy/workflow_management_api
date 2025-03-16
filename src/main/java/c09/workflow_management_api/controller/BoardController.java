@@ -2,9 +2,11 @@ package c09.workflow_management_api.controller;
 
 import c09.workflow_management_api.model.Board;
 import c09.workflow_management_api.model.Group;
+import c09.workflow_management_api.model.User;
+import c09.workflow_management_api.model.dto.BoardDTO;
 import c09.workflow_management_api.service.board.BoardService;
 import c09.workflow_management_api.service.group.GroupService;
-import org.springframework.beans.factory.annotation.Autowired;
+import c09.workflow_management_api.service.user.UserService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -14,59 +16,46 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("api/boards")
-@CrossOrigin("*") // Chỉnh theo cổng React
+@CrossOrigin("*")
 public class BoardController {
+    private final BoardService boardService;
 
-    @Autowired
-    private BoardService boardService;
+    private final GroupService groupService;
+    private final UserService userService;
 
-    @Autowired
-    private GroupService groupService;
-
-    //  API Tạo Board (có groupId)
-    @PostMapping
-    public ResponseEntity<Board> createBoard(@RequestBody Board board) {
-        System.out.println(" Tạo bảng mới với dữ liệu: " + board);
-
-        // Kiểm tra đối tượng Group có tồn tại không
-        if (board.getGroup() == null || board.getGroup().getId() == null) {
-            System.out.println(" Lỗi: Thiếu thông tin nhóm (group) trong board!");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
-        }
-
-        // Kiểm tra nhóm có tồn tại trong cơ sở dữ liệu không
-        Optional<Group> groupOptional = groupService.findById(board.getGroup().getId());
-        if (groupOptional.isEmpty()) {
-            System.out.println(" Lỗi: Không tìm thấy group với ID " + board.getGroup().getId());
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-
-        // Đặt nhóm vào bảng
-        board.setGroup(groupOptional.get());
-        boardService.save(board);
-
-        System.out.println("Tạo bảng thành công: " + board);
-        return ResponseEntity.status(HttpStatus.CREATED).body(board);
+    public BoardController(BoardService boardService, GroupService groupService, UserService userService) {
+        this.boardService = boardService;
+        this.groupService = groupService;
+        this.userService = userService;
     }
 
-
-
-    //  API Lấy danh sách Board theo groupId
     @GetMapping
-    public ResponseEntity<List<Board>> getBoards(@RequestParam(required = false) Long groupId) {
-        System.out.println(" API /api/boards được gọi với groupId: " + groupId);
-
+    public ResponseEntity<?> getBoards(@RequestParam(required = false) Long groupId) {
         List<Board> boards;
         if (groupId != null) {
-            System.out.println(" Lọc theo groupId...");
             boards = boardService.findByGroupId(groupId);
         } else {
-            System.out.println(" Lấy tất cả bảng...");
             boards = boardService.findAll();
         }
-
-        System.out.println(" Số bảng lấy được: " + boards.size());
-        return ResponseEntity.ok(boards);
+        List<BoardDTO> boardDTOList = boards.stream().map(BoardDTO::new).toList();
+        return ResponseEntity.ok(boardDTOList);
     }
 
+    @PostMapping
+    public ResponseEntity<?> createBoard(@RequestBody Board board) {
+        Optional<Group> group = groupService.findById(board.getGroup_id());
+        if (group.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nhóm không tồn tại");
+        }
+        Optional<User> user = userService.findById(board.getCreated_by());
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Người dùng không tồn tại");
+        }
+
+        board.setGroup(group.get());
+        board.setCreated_by_info(user.get());
+        boardService.save(board);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(new BoardDTO(board));
+    }
 }

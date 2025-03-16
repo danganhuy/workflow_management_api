@@ -29,11 +29,11 @@ public class BoardController {
         this.userService = userService;
     }
 
-    @GetMapping
-    public ResponseEntity<?> getBoards(@RequestParam(required = false) Long groupId) {
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBoards(@PathVariable Long id) {
         List<Board> boards;
-        if (groupId != null) {
-            boards = boardService.findByGroupId(groupId);
+        if (id != null) {
+            boards = boardService.findByGroupId(id);
         } else {
             boards = boardService.findAll();
         }

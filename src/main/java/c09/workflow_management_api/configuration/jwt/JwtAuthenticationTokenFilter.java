@@ -17,7 +17,6 @@ import org.springframework.web.filter.OncePerRequestFilter;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.io.IOException;
-import java.util.Optional;
 
 @Component
 public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
@@ -40,7 +39,7 @@ public class JwtAuthenticationTokenFilter extends OncePerRequestFilter {
             UserDetails userDetails = userService.loadUserByUsername(username);
             User user = userService.findByUsername(username)
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
-            request.setAttribute("id", user.getId());
+            request.setAttribute("userId", user.getId());
             UsernamePasswordAuthenticationToken authentication = new UsernamePasswordAuthenticationToken(
                     userDetails, null, userDetails.getAuthorities()
             );

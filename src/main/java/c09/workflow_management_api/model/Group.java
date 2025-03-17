@@ -36,5 +36,5 @@ public class Group implements Serializable {
     private String description;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean deleted;
+    private Boolean deleted = false;
 }

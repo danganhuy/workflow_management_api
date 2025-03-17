@@ -1,11 +1,15 @@
 package c09.workflow_management_api.controller;
 
 import c09.workflow_management_api.model.Group;
+import c09.workflow_management_api.model.User;
 import c09.workflow_management_api.model.dto.GroupDTO;
 import c09.workflow_management_api.service.group.IGroupService;
+import c09.workflow_management_api.util.RequestHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.server.ResponseStatusException;
 
 import java.time.LocalDateTime;
 import java.util.List;
@@ -21,24 +25,34 @@ public class GroupController {
         this.groupService = groupService;
     }
 
+    //// Khi gửi request đến API nhớ thêm bearer token lấy từ thông tin đăng nhập trả về
+    //// Security sẽ xử lý token để lấy dữ liệu người dùng và truyền dữ liệu đó vào request
+    //// request sau đó sẽ được truyền xuống các controller nếu hàm có nhận HttpServletRequest như dưới
+    //// Lấy User để lấy dữ liệu chỉ người dùng đó được truy cập
     @GetMapping()
-    public ResponseEntity<?> getGroupList() {
-        List<Group> groupList = groupService.findAll();
+    public ResponseEntity<?> getGroupListByUser(HttpServletRequest request) {
+        User user = RequestHandler.getUser(request); // Lấy user từ request
+        List<Group> groupList = groupService.findAllByUser(user);
         List<GroupDTO> groupDTOList = groupList.stream().map(GroupDTO::new).toList();
         return new ResponseEntity<>(groupDTOList, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getGroupById(@PathVariable Long id) {
-        Optional<Group> group = groupService.findById(id);
-        if (group.isEmpty()) {
-            return new ResponseEntity<>("Nhóm không tồn tại", HttpStatus.NOT_FOUND);
+    public ResponseEntity<?> getGroupById(@PathVariable Long id, HttpServletRequest request) {
+        try {
+            User user = RequestHandler.getUser(request);
+            Group group = groupService.findByIdAndUser(id, user);
+            return new ResponseEntity<>(new GroupDTO(group), HttpStatus.OK);
+        } catch (ResponseStatusException e) {
+            return new ResponseEntity<>(e.getMessage(), e.getStatusCode());
         }
-        return new ResponseEntity<>(new GroupDTO(group.get()), HttpStatus.OK);
     }
 
     @PostMapping()
-    public ResponseEntity<?> addGroup(@RequestBody Group group) {
+    public ResponseEntity<?> addGroup(@RequestBody Group group, HttpServletRequest request) {
+        User user = RequestHandler.getUser(request);
+        group.setId(null);
+        group.setCreated_by(user.getId());
         group.setCreated_at(LocalDateTime.now());
         groupService.save(group);
         return new ResponseEntity<>(new GroupDTO(group), HttpStatus.OK);

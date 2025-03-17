@@ -1,9 +1,10 @@
 package c09.workflow_management_api.controller;
 
+import c09.workflow_management_api.model.GroupMember;
 import c09.workflow_management_api.model.dto.GroupMemberDTO;
 import c09.workflow_management_api.model.form.MemberTypeForm;
 import c09.workflow_management_api.model.type.EMemberType;
-import c09.workflow_management_api.service.member.MemberService;
+import c09.workflow_management_api.service.group_member.GroupMemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,22 +16,26 @@ import java.util.List;
 @RestController
 @RequestMapping("/members")
 @RequiredArgsConstructor
-public class MemberGroupController {
-    private final MemberService memberService;
+public class GroupMemberController {
+    private final GroupMemberService groupMemberService;
 
     @GetMapping("/{groupId}")
     public ResponseEntity<?> getGroupMembers(@PathVariable Long groupId) {
-        List<GroupMemberDTO> members = memberService.getGroupMembers(groupId);
-        return ResponseEntity.ok(members);
+        List<GroupMember> memberList = groupMemberService.findAllByGroupId(groupId);
+        List<GroupMemberDTO> memberDTOList = memberList.stream().map(GroupMemberDTO::new).toList();
+        return ResponseEntity.ok(memberDTOList);
     }
-
+    // Phương thức thêm thành viên bỏ add trong url đi
+    // Hàm trả về danh sách thành viên phải kiểm tra xem người dùng có trong nhóm hay nhóm để công khai không
+    // Kiểm tra người dùng có quyền moderator trong nhóm không thì mới được thêm thành viên
+    // ^ tương tự với xóa, sửa quyền thành viên
     @PostMapping("/{groupId}/add")
     public ResponseEntity<?> addMemberByEmail(@PathVariable Long groupId, @RequestParam String email) {
         if (email == null || email.isEmpty()) {
             return ResponseEntity.badRequest().body("Email không được để trống.");
         }
 
-        boolean isAdded = memberService.addMemberByEmail(groupId, email);
+        boolean isAdded = groupMemberService.addMemberByEmail(groupId, email);
         if (isAdded) {
             return ResponseEntity.ok("Thêm thành viên thành công.");
         } else {
@@ -40,7 +45,7 @@ public class MemberGroupController {
 
     @DeleteMapping("/{groupId}/{userId}")
     public ResponseEntity<?> removeMemberById(@PathVariable Long groupId, @PathVariable Long userId) {
-        memberService.removeMemberById(groupId, userId);
+        groupMemberService.removeMemberById(groupId, userId);
         return ResponseEntity.ok("Xóa thành viên thành công.");
     }
 
@@ -56,7 +61,7 @@ public class MemberGroupController {
             return new ResponseEntity<>("Vai trò không hợp lệ", HttpStatus.BAD_REQUEST);
         }
 
-        memberService.updateMemberRole(groupId, userId, type);
+        groupMemberService.updateMemberRole(groupId, userId, type);
         return ResponseEntity.ok("Cập nhật quyền thành viên thành công.");
     }
 }

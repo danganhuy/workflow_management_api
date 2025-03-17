@@ -1,7 +1,6 @@
-package c09.workflow_management_api.service.member;
+package c09.workflow_management_api.service.group_member;
 
 import c09.workflow_management_api.model.composite.GroupMemberId;
-import c09.workflow_management_api.model.dto.GroupMemberDTO;
 import c09.workflow_management_api.model.Group;
 import c09.workflow_management_api.model.GroupMember;
 import c09.workflow_management_api.model.User;
@@ -15,21 +14,23 @@ import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
-import java.util.stream.Collectors;
+import java.util.Optional;
 
 @Service
 @RequiredArgsConstructor
-public class MemberService {
+public class GroupMemberService implements IGroupMemberService {
     private final IGroupRepository groupRepository;
     private final IUserRepository userRepository;
     private final IGroupMemberRepository groupMemberRepository;
 
-    public List<GroupMemberDTO> getGroupMembers(Long groupId) {
-        List<GroupMember> members = groupMemberRepository.findById_Group_Id(groupId);
+    @Override
+    public List<GroupMember> findAll() {
+        return List.of();
+    }
 
-        return members.stream()
-                .map(GroupMemberDTO::new)
-                .collect(Collectors.toList());
+    @Override
+    public List<GroupMember> findAllByGroupId(Long groupId) {
+        return groupMemberRepository.findById_Group_Id(groupId);
     }
 
     public boolean addMemberByEmail(Long groupId, String email) {
@@ -75,6 +76,22 @@ public class MemberService {
         // Cập nhật quyền của thành viên
         groupMember.setMember_type(memberType);
         groupMemberRepository.save(groupMember);
+    }
+
+
+    @Override
+    public Optional<GroupMember> findById(Long id) {
+        return Optional.empty();
+    }
+
+    @Override
+    public void save(GroupMember member) {
+
+    }
+
+    @Override
+    public void deleteById(Long id) {
+
     }
 }
 

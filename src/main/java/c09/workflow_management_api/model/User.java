@@ -45,5 +45,6 @@ public class User implements Serializable {
 
     private String activation_key = "";
 
+    @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean deleted = false;
 }

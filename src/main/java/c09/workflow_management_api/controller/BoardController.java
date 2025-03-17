@@ -28,7 +28,10 @@ public class BoardController {
         this.groupService = groupService;
         this.userService = userService;
     }
-
+    // Tách phương thức tìm toàn bộ bảng và tìm bảng theo nhóm ra làm 2 phương thức
+    // Tìm bảng theo nhóm chỉ trả về dữ liệu khi nhóm để công khai hoặc người dùng trong nhóm
+    //  ^ Tham khảo phương thức findByIdAndUser của GroupService
+    // Phương thức tạo sửa xóa bảng phải kiểm tra người dùng có quyền quản lý nhóm
     @GetMapping("/{id}")
     public ResponseEntity<?> getBoards(@PathVariable Long id) {
         List<Board> boards;

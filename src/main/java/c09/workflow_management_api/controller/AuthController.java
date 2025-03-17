@@ -49,7 +49,6 @@ public class AuthController {
                     currentUser.getId(), jwt, userDetails.getUsername(),
                     userDetails.getUsername(), userDetails.getAuthorities()));
         } catch (Exception e) {
-            System.out.println(e.getMessage());
             return new ResponseEntity<>("Wrong username or password",HttpStatus.BAD_REQUEST);
         }
     }

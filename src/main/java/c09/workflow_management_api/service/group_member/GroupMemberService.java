@@ -4,6 +4,7 @@ import c09.workflow_management_api.model.composite.GroupMemberId;
 import c09.workflow_management_api.model.Group;
 import c09.workflow_management_api.model.GroupMember;
 import c09.workflow_management_api.model.User;
+import c09.workflow_management_api.model.form.MemberTypeForm;
 import c09.workflow_management_api.model.type.EMemberType;
 import c09.workflow_management_api.repository.IGroupMemberRepository;
 import c09.workflow_management_api.repository.IGroupRepository;
@@ -33,22 +34,34 @@ public class GroupMemberService implements IGroupMemberService {
         return groupMemberRepository.findById_Group_Id(groupId);
     }
 
-    public boolean addMemberByEmail(Long groupId, String email) {
+    public boolean addMemberByEmail(Long groupId, String email, MemberTypeForm memberTypeForm) {
+        // Tìm user và group
         User user = userRepository.findByEmail(email)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Nhóm không tồn tại"));
 
+        // Kiểm tra xem user đã là thành viên chưa
         if (groupMemberRepository.existsById_GroupAndId_User(group, user)) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Người dùng đã là thành viên");
         }
 
+        // Tạo groupMember mới
         GroupMember groupMember = new GroupMember();
         groupMember.setId(new GroupMemberId());
         groupMember.getId().setGroup(group);
         groupMember.getId().setUser(user);
-        groupMemberRepository.save(groupMember);
 
+        // Gán quyền từ memberTypeForm (nếu có)
+        EMemberType type = EMemberType.MEMBER; // default
+        try {
+            type = EMemberType.valueOf(memberTypeForm.getType());
+        } catch (Exception e) {
+            // Nếu không parse được thì cứ để MEMBER mặc định
+        }
+        groupMember.setMember_type(type);
+
+        groupMemberRepository.save(groupMember);
         return true;
     }
 

@@ -14,7 +14,7 @@ import java.util.List;
 
 @CrossOrigin("*")
 @RestController
-@RequestMapping("/members")
+@RequestMapping("/api/members")
 @RequiredArgsConstructor
 public class GroupMemberController {
     private final GroupMemberService groupMemberService;
@@ -29,19 +29,23 @@ public class GroupMemberController {
     // Hàm trả về danh sách thành viên phải kiểm tra xem người dùng có trong nhóm hay nhóm để công khai không
     // Kiểm tra người dùng có quyền moderator trong nhóm không thì mới được thêm thành viên
     // ^ tương tự với xóa, sửa quyền thành viên
-    @PostMapping("/{groupId}/add")
-    public ResponseEntity<?> addMemberByEmail(@PathVariable Long groupId, @RequestParam String email) {
+    @PostMapping("/{groupId}")
+    public ResponseEntity<?> addMemberByEmail(
+            @PathVariable Long groupId,
+            @RequestParam String email,
+            @RequestBody MemberTypeForm memberTypeForm) {
         if (email == null || email.isEmpty()) {
             return ResponseEntity.badRequest().body("Email không được để trống.");
         }
 
-        boolean isAdded = groupMemberService.addMemberByEmail(groupId, email);
+        boolean isAdded = groupMemberService.addMemberByEmail(groupId, email, memberTypeForm);
         if (isAdded) {
             return ResponseEntity.ok("Thêm thành viên thành công.");
         } else {
             return ResponseEntity.badRequest().body("Không thể thêm thành viên. Email không tồn tại hoặc đã là thành viên.");
         }
     }
+
 
     @DeleteMapping("/{groupId}/{userId}")
     public ResponseEntity<?> removeMemberById(@PathVariable Long groupId, @PathVariable Long userId) {

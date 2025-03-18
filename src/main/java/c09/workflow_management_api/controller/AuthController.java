@@ -21,7 +21,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/auth")
-@CrossOrigin(origins = "http://localhost:5173")
+@CrossOrigin("*")
 public class AuthController {
     private final AuthenticationManager authenticationManager;
     private final JwtService jwtService;

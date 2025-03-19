@@ -28,6 +28,13 @@ public class BoardController {
         this.groupService = groupService;
         this.userService = userService;
     }
+    @GetMapping
+    public ResponseEntity<?> getAllBoards() {
+        List<Board> boards = boardService.findAll();
+        List<BoardDTO> boardDTOList = boards.stream().map(BoardDTO::new).toList();
+        return ResponseEntity.ok(boardDTOList);
+    }
+
     // Tách phương thức tìm toàn bộ bảng và tìm bảng theo nhóm ra làm 2 phương thức
     // Tìm bảng theo nhóm chỉ trả về dữ liệu khi nhóm để công khai hoặc người dùng trong nhóm
     //  ^ Tham khảo phương thức findByIdAndUser của GroupService

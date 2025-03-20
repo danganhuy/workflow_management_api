@@ -28,6 +28,7 @@ public class BoardController {
         this.groupService = groupService;
         this.userService = userService;
     }
+
     @GetMapping
     public ResponseEntity<?> getAllBoards() {
         List<Board> boards = boardService.findAll();
@@ -67,5 +68,36 @@ public class BoardController {
         boardService.save(board);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(new BoardDTO(board));
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<?> updateBoard(@PathVariable Long id, @RequestBody Board updatedBoard) {
+        Optional<Board> boardOptional = boardService.findById(id);
+        if (boardOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bảng không tồn tại");
+        }
+        Optional<Group> group = groupService.findById(updatedBoard.getGroup_id());
+        if (group.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nhóm không tồn tại");
+        }
+        Optional<User> user = userService.findById(updatedBoard.getCreated_by());
+        if (user.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Người dùng không tồn tại");
+        }
+
+        updatedBoard.setId(id);
+        updatedBoard.setGroup(group.get());
+        updatedBoard.setCreated_by_info(user.get());
+        boardService.save(updatedBoard);
+        return ResponseEntity.ok(new BoardDTO(updatedBoard));
+    }
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
+        Optional<Board> boardOptional = boardService.findById(id);
+        if (boardOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bảng không tồn tại");
+        }
+        boardService.deleteById(id);
+        return ResponseEntity.ok(id);
     }
 }

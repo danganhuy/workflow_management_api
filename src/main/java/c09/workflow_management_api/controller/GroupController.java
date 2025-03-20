@@ -25,10 +25,6 @@ public class GroupController {
         this.groupService = groupService;
     }
 
-    //// Khi gửi request đến API nhớ thêm bearer token lấy từ thông tin đăng nhập trả về
-    //// Security sẽ xử lý token để lấy dữ liệu người dùng và truyền dữ liệu đó vào request
-    //// request sau đó sẽ được truyền xuống các controller nếu hàm có nhận HttpServletRequest như dưới
-    //// Lấy User để lấy dữ liệu chỉ người dùng đó được truy cập
     @GetMapping()
     public ResponseEntity<?> getGroupListByUser(HttpServletRequest request) {
         User user = RequestHandler.getUser(request); // Lấy user từ request
@@ -73,9 +69,6 @@ public class GroupController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteGroup(@PathVariable Long id) {
-        if (groupService.findById(id).isEmpty()) {
-            return new ResponseEntity<>("Nhóm không tồn tại", HttpStatus.NOT_FOUND);
-        }
         groupService.deleteById(id);
         return new ResponseEntity<>(id, HttpStatus.OK);
     }

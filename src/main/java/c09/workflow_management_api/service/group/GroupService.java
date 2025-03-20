@@ -39,7 +39,9 @@ public class GroupService implements IGroupService {
         List<GroupMember> groupMembers = groupMemberRepository.findById_User_Id(user.getId());
         List<Group> groups = new ArrayList<>();
         for (GroupMember groupMember : groupMembers) {
-            groupRepository.findById(groupMember.getId().getGroup().getId()).ifPresent(groups::add);
+            groupRepository.findById(groupMember.getId().getGroup().getId())
+                    .filter(group -> !group.getDeleted())
+                    .ifPresent(groups::add);
         }
         return groups;
     }
@@ -53,7 +55,7 @@ public class GroupService implements IGroupService {
     public Group findByIdAndUser(Long groupId, User user) {
         Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
-        if (groupMemberRepository.existsById_GroupAndId_User(group, user) || group.getAccess() == EAccess.PUBLIC) {
+        if (!group.getDeleted() && (groupMemberRepository.existsById_GroupAndId_User(group, user) || group.getAccess() == EAccess.PUBLIC)) {
             return group;
         } else {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found");
@@ -76,12 +78,16 @@ public class GroupService implements IGroupService {
             groupMemberRepository.save(member);
         }
         else {
+            group.setDeleted(false);
             groupRepository.save(group);
         }
     }
 
     @Override
     public void deleteById(Long id) {
-        groupRepository.deleteById(id);
+        Group group = groupRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
+        group.setDeleted(true);
+        groupRepository.save(group);
     }
 }

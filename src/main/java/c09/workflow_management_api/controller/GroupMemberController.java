@@ -25,20 +25,17 @@ public class GroupMemberController {
         List<GroupMemberDTO> memberDTOList = memberList.stream().map(GroupMemberDTO::new).toList();
         return ResponseEntity.ok(memberDTOList);
     }
-    // Phương thức thêm thành viên bỏ add trong url đi
-    // Hàm trả về danh sách thành viên phải kiểm tra xem người dùng có trong nhóm hay nhóm để công khai không
-    // Kiểm tra người dùng có quyền moderator trong nhóm không thì mới được thêm thành viên
-    // ^ tương tự với xóa, sửa quyền thành viên
+
     @PostMapping("/{groupId}")
     public ResponseEntity<?> addMemberByEmail(
             @PathVariable Long groupId,
             @RequestParam String email,
-            @RequestBody MemberTypeForm memberTypeForm) {
+            @RequestBody MemberTypeForm memberType) {
         if (email == null || email.isEmpty()) {
             return ResponseEntity.badRequest().body("Email không được để trống.");
         }
 
-        boolean isAdded = groupMemberService.addMemberByEmail(groupId, email, memberTypeForm);
+        boolean isAdded = groupMemberService.addMemberByEmail(groupId, email, memberType);
         if (isAdded) {
             return ResponseEntity.ok("Thêm thành viên thành công.");
         } else {
@@ -59,7 +56,6 @@ public class GroupMemberController {
                                               @RequestBody MemberTypeForm memberType) {
         EMemberType type;
         try {
-            System.out.println(memberType);
             type = EMemberType.valueOf(memberType.getType());
         } catch (Exception e) {
             return new ResponseEntity<>("Vai trò không hợp lệ", HttpStatus.BAD_REQUEST);

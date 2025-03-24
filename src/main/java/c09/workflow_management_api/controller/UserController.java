@@ -1,13 +1,19 @@
 package c09.workflow_management_api.controller;
 
+import c09.workflow_management_api.model.DTO.ChangePasswordRequest;
 import c09.workflow_management_api.model.User;
 import c09.workflow_management_api.service.security.JwtService;
 import c09.workflow_management_api.service.uploadFile.StorageService;
 import c09.workflow_management_api.service.user.UserService;
 import c09.workflow_management_api.util.RequestHandler;
 import jakarta.servlet.http.HttpServletRequest;
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotEmpty;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
@@ -29,7 +35,7 @@ public class UserController {
     private StorageService storageService;
 
     @Autowired
-    private JwtService jwtService;
+    private PasswordEncoder passwordEncoder;
 
 
     @GetMapping
@@ -76,13 +82,40 @@ public class UserController {
                 ));
             }
         }
-        userService.save(user);
-        user.setPassword(null); // ẩn mật khẩu khi trả về
-
+        userService.update(user);
         return ResponseEntity.ok(Map.of(
                 "message", "Cập nhật thông tin thành công",
                 "user", user
         ));
+    }
+
+    @PostMapping("/{id}/change-password")
+    public ResponseEntity<?> changePassword(
+            @PathVariable Long id,
+            @RequestBody ChangePasswordRequest request) {
+        Optional<User> optionalUser = userService.findById(id);
+        if (optionalUser.isEmpty()) {
+            return ResponseEntity.status(404).body(Map.of("message", "User không tồn tại."));
+        }
+
+        User user = optionalUser.get();
+
+        if (!passwordEncoder.matches(request.getCurrentPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Mật khẩu hiện tại không đúng."));
+        }
+
+        if (!request.getNewPassword().equals(request.getConfirmPassword())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Mật khẩu mới và xác nhận không khớp."));
+        }
+
+        if (passwordEncoder.matches(request.getNewPassword(), user.getPassword())) {
+            return ResponseEntity.badRequest().body(Map.of("message", "Mật khẩu mới không được trùng với mật khẩu hiện tại."));
+        }
+
+        // Chỉ gọi service với id và mật khẩu mới
+        userService.changePassword(id, request.getNewPassword());
+
+        return ResponseEntity.ok(Map.of("message", "Thay đổi mật khẩu thành công."));
     }
 
 }

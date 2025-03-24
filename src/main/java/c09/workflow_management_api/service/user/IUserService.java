@@ -10,4 +10,6 @@ public interface IUserService extends IGenericService<User> {
     UserDetails loadUserByUsername(String username);
     Optional<User> findByUsername(String username);
     Optional<User> findByEmail(String email);
+    void update(User user);
+    void changePassword(Long userId, String newPassword);
 }

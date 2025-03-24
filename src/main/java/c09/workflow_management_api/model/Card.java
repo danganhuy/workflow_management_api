@@ -1,5 +1,6 @@
 package c09.workflow_management_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -23,10 +24,12 @@ public class Card implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "created_by", nullable = false, updatable = false)
+    @JsonIgnore
     private User created_by_info;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "list_id", nullable = false, updatable = false)
+    @JsonIgnore
     private List list;
 
     private Integer priority;

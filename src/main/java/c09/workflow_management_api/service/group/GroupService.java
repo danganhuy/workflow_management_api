@@ -64,6 +64,11 @@ public class GroupService implements IGroupService {
 
     @Override
     public void save(Group group) {
+        throw new RuntimeException("Not supported");
+    }
+
+    @Override
+    public void save(Group group, User requester) {
         if (group.getId() == null) {
             User user = userRepository.findById(group.getCreated_by())
                     .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
@@ -74,18 +79,34 @@ public class GroupService implements IGroupService {
             member.setId(new GroupMemberId());
             member.getId().setGroup(created);
             member.getId().setUser(user);
-            member.setMember_type(EMemberType.MODERATOR);
+            member.setMember_type(EMemberType.OWNER);
             groupMemberRepository.save(member);
         }
         else {
+            GroupMember member = groupMemberRepository.findById_GroupAndId_User(group, requester)
+                            .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Không có quyền"));
+            if (member.getMember_type() != EMemberType.OWNER && member.getMember_type() != EMemberType.ADMIN) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Không có quyền");
+            }
             group.setDeleted(false);
             groupRepository.save(group);
         }
     }
 
     @Override
-    public void deleteById(Long id) {
-        Group group = groupRepository.findById(id)
+    public void deleteById(Long groupId, User requester) {
+        Group group = groupRepository.findById(groupId)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
+        GroupMember member = groupMemberRepository.findById_GroupAndId_User(group, requester)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Không có quyền"));
+        if (member.getMember_type() != EMemberType.OWNER) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Không có quyền");
+        }
+    }
+
+    @Override
+    public void deleteById(Long groupId) {
+        Group group = groupRepository.findById(groupId)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Group not found"));
         group.setDeleted(true);
         groupRepository.save(group);

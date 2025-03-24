@@ -55,7 +55,8 @@ public class GroupController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> updateGroup(@RequestBody Group group, @PathVariable Long id) {
+    public ResponseEntity<?> updateGroup(@RequestBody Group group, @PathVariable Long id, HttpServletRequest request) {
+        User requester = RequestHandler.getUser(request);
         Optional<Group> groupOptional = groupService.findById(id);
         if (groupOptional.isEmpty()) {
             return new ResponseEntity<>("Nhóm không tồn tại", HttpStatus.NOT_FOUND);
@@ -63,7 +64,7 @@ public class GroupController {
         group.setId(id);
         group.setCreated_at(groupOptional.get().getCreated_at());
         group.setCreated_by(groupOptional.get().getCreated_by());
-        groupService.save(group);
+        groupService.save(group, requester);
         return new ResponseEntity<>(new GroupDTO(group), HttpStatus.OK);
     }
 

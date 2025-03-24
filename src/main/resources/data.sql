@@ -1,9 +1,9 @@
 -- 1. Chèn dữ liệu vào tbl_user
 -- Mật khẩu: 123456
 INSERT INTO tbl_user (activation_key, created_at, description, email, password, username)
-VALUES ('', '2025-03-14 15:00:00', 'User one description', 'user1@example.com', '$2a$12$AUIuCvV0hUiJGhzZxivJiepajNv8UMnW9NMIbEbOkPRBr3CmwXVeK', 'user1'),
-       ('', '2025-03-14 15:05:00', 'User two description', 'user2@example.com', '$2a$12$AUIuCvV0hUiJGhzZxivJiepajNv8UMnW9NMIbEbOkPRBr3CmwXVeK', 'user2'),
-       ('', '2025-03-14 15:10:00', 'User three description', 'user3@example.com', '$2a$12$AUIuCvV0hUiJGhzZxivJiepajNv8UMnW9NMIbEbOkPRBr3CmwXVeK', 'user3');
+VALUES ('', '2025-03-14 15:00:00', 'User A description', 'userA@example.com', '$2a$12$AUIuCvV0hUiJGhzZxivJiepajNv8UMnW9NMIbEbOkPRBr3CmwXVeK', 'user A'),
+       ('', '2025-03-14 15:05:00', 'User B description', 'userB@example.com', '$2a$12$AUIuCvV0hUiJGhzZxivJiepajNv8UMnW9NMIbEbOkPRBr3CmwXVeK', 'user B'),
+       ('', '2025-03-14 15:10:00', 'User C description', 'userC@example.com', '$2a$12$AUIuCvV0hUiJGhzZxivJiepajNv8UMnW9NMIbEbOkPRBr3CmwXVeK', 'user C');
 
 -- 2. Chèn dữ liệu vào tbl_group
 INSERT INTO tbl_group (access, created_at, description, name, type, created_by)
@@ -51,5 +51,5 @@ VALUES ('2025-03-14 15:55:00', 'Comment 1 on Card 1', 1, 2),
 -- 10. Chèn dữ liệu vào tbl_group_member
 INSERT INTO tbl_group_member (member_type, group_id, user_id)
 VALUES ('MEMBER', 1, 2),
-       ('MODERATOR', 1, 1),
-       ('MEMBER', 2, 3);
+       ('OWNER', 1, 1),
+       ('OWNER', 2, 3);

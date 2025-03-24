@@ -1,5 +1,5 @@
 package c09.workflow_management_api.model.type;
 
 public enum EMemberType {
-    MEMBER,MODERATOR
+    MEMBER, ADMIN, OWNER
 }

@@ -14,6 +14,7 @@ public class GroupDTO {
     private EAccess access;
     private LocalDateTime createdAt;
     private Long createdBy;
+    private String createdByName;
     private String description;
 
     public GroupDTO(Group group) {
@@ -23,6 +24,7 @@ public class GroupDTO {
         access = group.getAccess();
         createdAt = group.getCreated_at();
         createdBy = group.getCreated_by();
+        createdByName = group.getCreated_by_info().getUsername();
         description = group.getDescription();
     }
 }

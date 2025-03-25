@@ -1,5 +1,7 @@
 package c09.workflow_management_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -9,6 +11,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "tbl_list")
 @Data
+@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
 public class List implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -17,8 +20,9 @@ public class List implements Serializable {
     @Column(insertable = false, updatable = false)
     private Long board_id;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false, updatable = false)
+    @JsonIgnore
     private Board board;
 
     @Column(nullable = false)
@@ -38,5 +42,9 @@ public class List implements Serializable {
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
     private Boolean deleted;
+
+    // Thêm mối quan hệ OneToMany với Card
+    @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
+    private java.util.List<Card> cards;
 }
 

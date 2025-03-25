@@ -54,7 +54,7 @@ public class GroupController {
         group.setId(null);
         group.setCreated_by(user.getId());
         group.setCreated_at(LocalDateTime.now());
-        groupService.save(group);
+        groupService.save(group, user);
         return new ResponseEntity<>(new GroupDTO(group), HttpStatus.OK);
     }
 

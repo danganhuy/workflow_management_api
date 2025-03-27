@@ -9,4 +9,6 @@ import java.util.List;
 public interface IGroupService extends IGenericService<Group> {
     List<Group> findAllByUser(User user);
     Group findByIdAndUser(Long groupId, User user);
+    void save(Group group, User requester);
+    void deleteById(Long groupId, User requester);
 }

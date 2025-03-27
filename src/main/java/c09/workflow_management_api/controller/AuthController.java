@@ -4,6 +4,8 @@ import c09.workflow_management_api.model.User;
 import c09.workflow_management_api.model.dto.JwtResponse;
 import c09.workflow_management_api.service.security.JwtService;
 import c09.workflow_management_api.service.user.IUserService;
+import c09.workflow_management_api.util.RequestHandler;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;
 import org.springframework.http.HttpStatus;
@@ -33,6 +35,13 @@ public class AuthController {
         this.authenticationManager = authenticationManager;
         this.jwtService = jwtService;
         this.userService = userService;
+    }
+
+    @GetMapping("/info")
+    public ResponseEntity<?> info(HttpServletRequest request) {
+        User user = RequestHandler.getUser(request);
+        user.setPassword(null);
+        return new ResponseEntity<>(user, HttpStatus.OK);
     }
 
     @PostMapping("/login")

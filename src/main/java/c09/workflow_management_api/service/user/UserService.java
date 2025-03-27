@@ -29,8 +29,8 @@ public class UserService implements IUserService, UserDetailsService {
 
     @Override
     public UserDetails loadUserByUsername(String username) {
-        User user = userRepository.findByUsername(username).get();
-        return UserPrinciple.build(user);
+        Optional<User> user = userRepository.findByUsername(username);
+        return user.map(UserPrinciple::build).orElse(null);
     }
 
     @Override

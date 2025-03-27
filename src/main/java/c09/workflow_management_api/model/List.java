@@ -41,10 +41,13 @@ public class List implements Serializable {
     private Integer priority;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean deleted;
+    private Boolean deleted = false;
 
-    // Thêm mối quan hệ OneToMany với Card
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
     private java.util.List<Card> cards;
+
+    public Integer getPriority(List list) {
+        return list.getPriority();
+    }
 }
 

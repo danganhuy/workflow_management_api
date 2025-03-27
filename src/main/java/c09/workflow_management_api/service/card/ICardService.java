@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface ICardService extends IGenericService<Card> {
     List<Card> findByListId(Long listId);
+    void moveCard(Long listId, Card card);
 }

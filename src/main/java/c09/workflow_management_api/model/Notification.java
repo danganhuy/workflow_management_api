@@ -21,5 +21,5 @@ public class Notification {
     @Column(columnDefinition = "TEXT")
     private String description;
 
-    private Boolean read;
+    private Boolean is_reads;
 }

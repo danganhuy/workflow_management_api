@@ -27,7 +27,7 @@ public class GroupController {
 
     @GetMapping()
     public ResponseEntity<?> getGroupListByUser(HttpServletRequest request) {
-        User user = RequestHandler.getUser(request); // Lấy user từ request
+        User user = RequestHandler.getUser(request);
         List<Group> groupList = groupService.findAllByUser(user);
         List<GroupDTO> groupDTOList = groupList.stream().map(GroupDTO::new).toList();
         return new ResponseEntity<>(groupDTOList, HttpStatus.OK);

@@ -27,8 +27,11 @@ public class Card implements Serializable {
     @JsonIgnore
     private User created_by_info;
 
+    @Column(insertable = false, updatable = false)
+    private Long list_id;
+
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "list_id", nullable = false, updatable = false)
+    @JoinColumn(name = "list_id", nullable = false)
     @JsonIgnore
     private List list;
 
@@ -45,5 +48,9 @@ public class Card implements Serializable {
     private Set<Label> labels;
 
     @Column(columnDefinition = "BOOLEAN DEFAULT false")
-    private Boolean deleted;
+    private Boolean deleted = false;
+
+    public Integer getPriority(Card card) {
+        return card.getPriority();
+    }
 }

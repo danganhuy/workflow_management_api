@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping("/api/lists")
@@ -17,17 +18,26 @@ public class ListController {
     private ListService listService;
 
     @GetMapping("/board/{boardId}")
-    public ResponseEntity<Set<List>> getListsByBoard(@PathVariable  Long boardId) {
-        return ResponseEntity.ok(listService.findAllByBoardId(boardId));
+    public ResponseEntity<?> getListsByBoard(@PathVariable  Long boardId) {
+        return ResponseEntity.ok(
+                listService.findAllByBoardId(boardId)
+                        .stream()
+                        .map(ListDTO::fromEntity)
+                        .collect(Collectors.toSet())
+        );
     }
 
     @PostMapping
-    public ResponseEntity<List> createList(@RequestBody ListDTO listDTO) {
-        if (listDTO.getId() != null) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<?> createList(@RequestBody ListDTO listDTO) {
+        try {
+            if (listDTO.getId() != null) {
+                return ResponseEntity.badRequest().body("List mới không được có ID");
+            }
+            List newList = listService.saveList(listDTO);
+            return ResponseEntity.ok(newList);
+        } catch (Exception e) {
+            return ResponseEntity.internalServerError().body("Lỗi khi tạo List: " + e.getMessage());
         }
-        List newList = listService.saveList(listDTO);
-        return ResponseEntity.ok(newList);
     }
 
     @PutMapping("/{id}")

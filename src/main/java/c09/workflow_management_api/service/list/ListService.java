@@ -9,6 +9,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
@@ -63,7 +64,8 @@ public class ListService implements IListService {
     }
 
     public Set<List> findAllByBoardId(Long boardId) {
-        return iListRepository.findAllByBoard_id(boardId);
+        //return iListRepository.findAllByBoard_id(boardId);
+        return new HashSet<>(iListRepository.findAllByBoard_id(boardId));
     }
 
 }

@@ -13,7 +13,9 @@ import java.util.Set;
 public class Label implements Serializable {
     @EmbeddedId
     private LabelId id;
-
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "board_id", insertable = false, updatable = false)
+    private Board board;
     @ManyToMany
     @JoinTable(name = "tbl_card_label",
             joinColumns = {

@@ -5,6 +5,7 @@ import c09.workflow_management_api.repository.ICardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -34,6 +35,7 @@ public class CardService implements ICardService {
     }
 
     public List<Card> findByListId(Long listId) {
-        return cardRepository.findByListId(listId);
+        List<Card> cards = cardRepository.findByListId(listId);
+        return cards != null ? new ArrayList<>(cards) : new ArrayList<>();
     }
 }

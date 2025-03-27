@@ -1,5 +1,6 @@
 package c09.workflow_management_api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.Data;
@@ -29,7 +30,7 @@ public class Card implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "list_id", nullable = false, updatable = false)
-    @JsonIgnore
+    @JsonBackReference
     private List list;
 
     private Integer priority;

@@ -1,27 +1,19 @@
 package c09.workflow_management_api.controller;
 
-import c09.workflow_management_api.model.DTO.ChangePasswordRequest;
+import c09.workflow_management_api.model.dto.ChangePasswordRequest;
 import c09.workflow_management_api.model.User;
-import c09.workflow_management_api.service.security.JwtService;
 import c09.workflow_management_api.service.uploadFile.StorageService;
 import c09.workflow_management_api.service.user.UserService;
 import c09.workflow_management_api.util.RequestHandler;
 import jakarta.servlet.http.HttpServletRequest;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotEmpty;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.core.Authentication;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
-import java.io.IOException;
-import java.nio.file.*;
 import java.util.Map;
 import java.util.Optional;
-import java.util.UUID;
 
 @RestController
 @RequestMapping("/api/users")
@@ -57,6 +49,7 @@ public class UserController {
     public ResponseEntity<?> updateUser(
             @PathVariable Long id,
             @RequestPart("username") String username,
+            @RequestPart("fullname") String fullname,
             @RequestPart("email") String email,
             @RequestPart("description") String description,
             @RequestPart(value = "avatar", required = false) MultipartFile avatar) {
@@ -68,6 +61,7 @@ public class UserController {
 
         User user = optionalUser.get();
         user.setUsername(username);
+        user.setFullname(fullname);
         user.setEmail(email);
         user.setDescription(description);
 

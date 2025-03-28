@@ -30,6 +30,8 @@ public class User implements Serializable {
     @Size(min = 6, message = "Password must have at least 6 characters")
     private String password;
 
+    private String fullname;
+
     @Column(nullable = false, unique = true)
     @NotEmpty(message = "Email cannot be empty")
     @Pattern(regexp = "^[a-zA-Z0-9_.±]+@[a-zA-Z0-9-]+\\.[a-zA-Z0-9-.]+$",

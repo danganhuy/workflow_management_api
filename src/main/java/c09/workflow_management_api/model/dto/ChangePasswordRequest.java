@@ -1,4 +1,4 @@
-package c09.workflow_management_api.model.DTO;
+package c09.workflow_management_api.model.dto;
 
 import lombok.Getter;
 import lombok.Setter;

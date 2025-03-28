@@ -40,7 +40,7 @@ public class BoardController {
     // Tìm bảng theo nhóm chỉ trả về dữ liệu khi nhóm để công khai hoặc người dùng trong nhóm
     //  ^ Tham khảo phương thức findByIdAndUser của GroupService
     // Phương thức tạo sửa xóa bảng phải kiểm tra người dùng có quyền quản lý nhóm
-    @GetMapping("/{id}")
+    @GetMapping("/{id}/{groupId}")
     public ResponseEntity<?> getBoards(@PathVariable Long id) {
         List<Board> boards;
         if (id != null) {
@@ -50,6 +50,16 @@ public class BoardController {
         }
         List<BoardDTO> boardDTOList = boards.stream().map(BoardDTO::new).toList();
         return ResponseEntity.ok(boardDTOList);
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBoardDetail(@PathVariable Long id) {
+        Optional<Board> boardOptional = boardService.findById(id);
+        if (boardOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bảng không tồn tại");
+        }
+        BoardDTO boardDTO = new BoardDTO(boardOptional.get());
+        return ResponseEntity.ok(boardDTO);
     }
 
     @PostMapping
@@ -87,7 +97,9 @@ public class BoardController {
 
         updatedBoard.setId(id);
         updatedBoard.setGroup(group.get());
+        updatedBoard.setGroup_id(group.get().getId());
         updatedBoard.setCreated_by_info(user.get());
+        updatedBoard.setCreated_by(user.get().getId());
         boardService.save(updatedBoard);
         return ResponseEntity.ok(new BoardDTO(updatedBoard));
     }

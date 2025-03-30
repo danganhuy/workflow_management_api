@@ -10,6 +10,6 @@ public class WebConfig implements WebMvcConfigurer {
     @Override
     public void addResourceHandlers(ResourceHandlerRegistry registry) {
         registry.addResourceHandler("/images/**")
-                .addResourceLocations("file:/Users/macos/Downloads/workflow_management_api/src/main/java/c09/workflow_management_api/images/");
+                .addResourceLocations("D:/CodeGym/Module_6/workflow_management_api/src/main/java/c09/workflow_management_api");
     }
 }

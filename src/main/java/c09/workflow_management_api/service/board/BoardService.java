@@ -17,12 +17,20 @@ public class BoardService implements IBoardService {
 
     @Override
     public List<Board> findAll() {
-        return boardRepository.findAll();
+        List<Board> boards = boardRepository.findAll();
+        boards.removeIf(Board::getDeleted);
+        return boards;
     }
 
     @Override
     public Optional<Board> findById(Long id) {
-        return boardRepository.findById(id);
+        Optional<Board> board = boardRepository.findById(id);
+        if (board.isPresent()) {
+            if (board.get().getDeleted()) {
+                return Optional.empty();
+            }
+        }
+        return board;
     }
 
     @Override
@@ -32,7 +40,8 @@ public class BoardService implements IBoardService {
 
     @Override
     public void deleteById(Long id) {
-        boardRepository.deleteById(id);
+        Optional<Board> board = boardRepository.findById(id);
+        board.ifPresent(value -> value.setDeleted(true));
     }
 
     public List<Board> findByGroupId(Long groupId) {

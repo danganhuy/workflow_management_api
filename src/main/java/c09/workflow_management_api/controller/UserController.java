@@ -19,15 +19,15 @@ import java.util.Optional;
 @RequestMapping("/api/users")
 @CrossOrigin("*")
 public class UserController {
+    private final UserService userService;
+    private final StorageService storageService;
+    private final PasswordEncoder passwordEncoder;
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private StorageService storageService;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
+    public UserController(UserService userService, StorageService storageService, PasswordEncoder passwordEncoder) {
+        this.userService = userService;
+        this.storageService = storageService;
+        this.passwordEncoder = passwordEncoder;
+    }
 
 
     @GetMapping
@@ -65,11 +65,10 @@ public class UserController {
         user.setEmail(email);
         user.setDescription(description);
 
-        // Nếu có avatar mới thì lưu file và cập nhật đường dẫn
         if (avatar != null && !avatar.isEmpty()) {
             try {
                 String fileName = storageService.storeWithUUID(avatar);
-                user.setImagePath("/images/" + fileName);   // đổi thành /images để đồng nhất với thư mục
+                user.setImagePath("/images/" + fileName);
             } catch (Exception e) {
                 return ResponseEntity.internalServerError().body(Map.of(
                         "message", "Lỗi khi tải lên avatar: " + e.getMessage()
@@ -106,7 +105,6 @@ public class UserController {
             return ResponseEntity.badRequest().body(Map.of("message", "Mật khẩu mới không được trùng với mật khẩu hiện tại."));
         }
 
-        // Chỉ gọi service với id và mật khẩu mới
         userService.changePassword(id, request.getNewPassword());
 
         return ResponseEntity.ok(Map.of("message", "Thay đổi mật khẩu thành công."));

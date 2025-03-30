@@ -2,7 +2,7 @@ package c09.workflow_management_api.controller;
 
 import c09.workflow_management_api.model.Group;
 import c09.workflow_management_api.model.User;
-import c09.workflow_management_api.model.dto.GroupDTO;
+import c09.workflow_management_api.model.dtos.GroupDTO;
 import c09.workflow_management_api.service.group.IGroupService;
 import c09.workflow_management_api.util.RequestHandler;
 import jakarta.servlet.http.HttpServletRequest;

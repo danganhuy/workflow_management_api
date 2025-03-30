@@ -1,6 +1,6 @@
 package c09.workflow_management_api.service.security;
 
-import c09.workflow_management_api.model.dto.UserPrinciple;
+import c09.workflow_management_api.model.dtos.UserPrinciple;
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.io.Decoders;
 import io.jsonwebtoken.security.Keys;

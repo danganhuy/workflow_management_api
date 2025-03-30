@@ -1,7 +1,7 @@
 package c09.workflow_management_api.controller;
 
 import c09.workflow_management_api.model.User;
-import c09.workflow_management_api.model.dto.CardDTO;
+import c09.workflow_management_api.model.dtos.CardDTO;
 import c09.workflow_management_api.model.Card;
 import c09.workflow_management_api.service.card.ICardService;
 import c09.workflow_management_api.util.RequestHandler;

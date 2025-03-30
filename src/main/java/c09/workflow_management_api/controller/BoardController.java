@@ -3,7 +3,7 @@ package c09.workflow_management_api.controller;
 import c09.workflow_management_api.model.Board;
 import c09.workflow_management_api.model.Group;
 import c09.workflow_management_api.model.User;
-import c09.workflow_management_api.model.dto.BoardDTO;
+import c09.workflow_management_api.model.dtos.BoardDTO;
 import c09.workflow_management_api.service.board.BoardService;
 import c09.workflow_management_api.service.group.GroupService;
 import c09.workflow_management_api.service.user.UserService;

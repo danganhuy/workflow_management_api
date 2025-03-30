@@ -1,6 +1,6 @@
 package c09.workflow_management_api.controller;
 
-import c09.workflow_management_api.model.dto.ChangePasswordRequest;
+import c09.workflow_management_api.model.dtos.ChangePasswordRequest;
 import c09.workflow_management_api.model.User;
 import c09.workflow_management_api.service.uploadFile.StorageService;
 import c09.workflow_management_api.service.user.UserService;

@@ -1,7 +1,7 @@
 package c09.workflow_management_api.controller;
 
 import c09.workflow_management_api.model.User;
-import c09.workflow_management_api.model.dto.JwtResponse;
+import c09.workflow_management_api.model.dtos.JwtResponse;
 import c09.workflow_management_api.service.security.JwtService;
 import c09.workflow_management_api.service.user.IUserService;
 import c09.workflow_management_api.util.RequestHandler;

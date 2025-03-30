@@ -2,7 +2,7 @@ package c09.workflow_management_api.controller;
 
 import c09.workflow_management_api.model.GroupMember;
 import c09.workflow_management_api.model.User;
-import c09.workflow_management_api.model.dto.GroupMemberDTO;
+import c09.workflow_management_api.model.dtos.GroupMemberDTO;
 import c09.workflow_management_api.model.form.MemberTypeForm;
 import c09.workflow_management_api.model.type.EMemberType;
 import c09.workflow_management_api.service.group_member.GroupMemberService;

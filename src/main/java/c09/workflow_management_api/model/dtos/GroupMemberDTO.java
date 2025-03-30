@@ -1,4 +1,4 @@
-package c09.workflow_management_api.model.dto;
+package c09.workflow_management_api.model.dtos;
 
 import c09.workflow_management_api.model.GroupMember;
 import c09.workflow_management_api.model.User;

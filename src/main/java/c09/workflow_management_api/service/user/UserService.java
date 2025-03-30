@@ -1,7 +1,7 @@
 package c09.workflow_management_api.service.user;
 
 import c09.workflow_management_api.model.User;
-import c09.workflow_management_api.model.dto.UserPrinciple;
+import c09.workflow_management_api.model.dtos.UserPrinciple;
 import c09.workflow_management_api.repository.IUserRepository;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.ConstraintViolationException;

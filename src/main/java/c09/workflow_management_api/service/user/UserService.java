@@ -64,6 +64,24 @@ public class UserService implements IUserService, UserDetailsService {
     }
 
     @Override
+    public void update(User user) {
+        Set<ConstraintViolation<User>> violations = validator.validate(user);
+        if (!violations.isEmpty()) {
+            throw new ConstraintViolationException(violations);
+        }
+        userRepository.save(user);
+    }
+
+    @Override
+    public void changePassword(Long userId, String newPassword) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new RuntimeException("User not found"));
+        user.setPassword(encoder.encode(newPassword));
+        userRepository.save(user);
+    }
+
+
+    @Override
     public void deleteById(Long id) {
 
     }

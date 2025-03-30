@@ -57,6 +57,16 @@ public class BoardController {
         return ResponseEntity.ok(boardDTOList);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBoardDetail(@PathVariable Long id) {
+        Optional<Board> boardOptional = boardService.findById(id);
+        if (boardOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bảng không tồn tại");
+        }
+        BoardDTO boardDTO = new BoardDTO(boardOptional.get());
+        return ResponseEntity.ok(boardDTO);
+    }
+
     @PostMapping
     public ResponseEntity<?> createBoard(@RequestBody Board board) {
         Optional<Group> group = groupService.findById(board.getGroup_id());

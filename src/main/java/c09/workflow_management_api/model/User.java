@@ -1,5 +1,6 @@
 package c09.workflow_management_api.model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.Pattern;
@@ -28,6 +29,8 @@ public class User implements Serializable {
     @NotEmpty(message = "Password cannot be empty")
     @Size(min = 6, message = "Password must have at least 6 characters")
     private String password;
+
+    private String fullname;
 
     @Column(nullable = false, unique = true)
     @NotEmpty(message = "Email cannot be empty")

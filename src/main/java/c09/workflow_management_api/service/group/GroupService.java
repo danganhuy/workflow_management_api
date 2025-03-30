@@ -8,7 +8,6 @@ import c09.workflow_management_api.model.type.EAccess;
 import c09.workflow_management_api.model.type.EMemberType;
 import c09.workflow_management_api.repository.IGroupMemberRepository;
 import c09.workflow_management_api.repository.IGroupRepository;
-import c09.workflow_management_api.repository.IUserRepository;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
@@ -21,12 +20,10 @@ import java.util.Optional;
 public class GroupService implements IGroupService {
     private final IGroupRepository groupRepository;
     private final IGroupMemberRepository groupMemberRepository;
-    private final IUserRepository userRepository;
 
-    public GroupService(IGroupRepository groupRepository, IGroupMemberRepository groupMemberRepository, IUserRepository userRepository) {
+    public GroupService(IGroupRepository groupRepository, IGroupMemberRepository groupMemberRepository) {
         this.groupRepository = groupRepository;
         this.groupMemberRepository = groupMemberRepository;
-        this.userRepository = userRepository;
     }
 
     @Override
@@ -70,15 +67,13 @@ public class GroupService implements IGroupService {
     @Override
     public void save(Group group, User requester) {
         if (group.getId() == null) {
-            User user = userRepository.findById(group.getCreated_by())
-                    .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Người dùng không tồn tại"));
-            group.setCreated_by_info(user);
+            group.setCreated_by_info(requester);
             Group created = groupRepository.save(group);
 
             GroupMember member = new GroupMember();
             member.setId(new GroupMemberId());
             member.getId().setGroup(created);
-            member.getId().setUser(user);
+            member.getId().setUser(requester);
             member.setMember_type(EMemberType.OWNER);
             groupMemberRepository.save(member);
         }

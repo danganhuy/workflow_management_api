@@ -15,7 +15,6 @@ public class CardDTO {
     private LocalDateTime created_at;
     private LocalDateTime due_date;
 
-
     public CardDTO(Card card) {
         this.id = card.getId();
         this.title = card.getTitle();

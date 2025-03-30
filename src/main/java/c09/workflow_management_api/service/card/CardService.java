@@ -99,6 +99,7 @@ public class CardService implements ICardService {
     }
 
     public List<Card> findByListId(Long listId) {
-        return cardRepository.findByListId(listId);
+        List<Card> cards = cardRepository.findByListId(listId);
+        return cards != null ? new ArrayList<>(cards) : new ArrayList<>();
     }
 }

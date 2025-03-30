@@ -8,12 +8,16 @@ import c09.workflow_management_api.util.RequestHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import c09.workflow_management_api.service.card.CardService;
 import org.springframework.http.HttpStatus;
+import c09.workflow_management_api.service.list.IListService;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
 
+@Slf4j
 @RestController
 @RequestMapping("/api/cards")
 @CrossOrigin("*")

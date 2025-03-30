@@ -1,7 +1,9 @@
 package c09.workflow_management_api.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -11,7 +13,8 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "tbl_list")
 @Data
-@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+//@JsonIgnoreProperties({"hibernateLazyInitializer", "handler"})
+@JsonIgnoreProperties({"board", "cards"})
 public class List implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -22,7 +25,7 @@ public class List implements Serializable {
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "board_id", nullable = false, updatable = false)
-    @JsonIgnore
+    @JsonBackReference
     private Board board;
 
     @Column(nullable = false)
@@ -44,6 +47,7 @@ public class List implements Serializable {
     private Boolean deleted = false;
 
     @OneToMany(mappedBy = "list", cascade = CascadeType.ALL, orphanRemoval = true)
+    @JsonIgnore
     private java.util.List<Card> cards;
 
     public Integer getPriority(List list) {

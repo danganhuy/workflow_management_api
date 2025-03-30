@@ -36,10 +36,15 @@ public class BoardController {
         return ResponseEntity.ok(boardDTOList);
     }
 
-    // Tách phương thức tìm toàn bộ bảng và tìm bảng theo nhóm ra làm 2 phương thức
-    // Tìm bảng theo nhóm chỉ trả về dữ liệu khi nhóm để công khai hoặc người dùng trong nhóm
-    //  ^ Tham khảo phương thức findByIdAndUser của GroupService
-    // Phương thức tạo sửa xóa bảng phải kiểm tra người dùng có quyền quản lý nhóm
+    @GetMapping("/details/{id}")
+    public ResponseEntity<?> getBoardById(@PathVariable Long id) {
+        Optional<Board> board = boardService.findById(id);
+        if (board.isPresent()) {
+            return ResponseEntity.ok(new BoardDTO(board.get()));
+        }
+        return ResponseEntity.status(HttpStatus.NOT_FOUND).build();
+    }
+
     @GetMapping("/{id}")
     public ResponseEntity<?> getBoards(@PathVariable Long id) {
         List<Board> boards;
@@ -70,26 +75,16 @@ public class BoardController {
         return ResponseEntity.status(HttpStatus.CREATED).body(new BoardDTO(board));
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<?> updateBoard(@PathVariable Long id, @RequestBody Board updatedBoard) {
-        Optional<Board> boardOptional = boardService.findById(id);
-        if (boardOptional.isEmpty()) {
+    @PutMapping("/name/{id}")
+    public ResponseEntity<?> updateBoard(@PathVariable Long id, @RequestBody Board board) {
+        Optional<Board> oldBoard = boardService.findById(id);
+        if (oldBoard.isEmpty()) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bảng không tồn tại");
         }
-        Optional<Group> group = groupService.findById(updatedBoard.getGroup_id());
-        if (group.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Nhóm không tồn tại");
-        }
-        Optional<User> user = userService.findById(updatedBoard.getCreated_by());
-        if (user.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Người dùng không tồn tại");
-        }
+        oldBoard.get().setName(board.getName());
 
-        updatedBoard.setId(id);
-        updatedBoard.setGroup(group.get());
-        updatedBoard.setCreated_by_info(user.get());
-        boardService.save(updatedBoard);
-        return ResponseEntity.ok(new BoardDTO(updatedBoard));
+        boardService.save(oldBoard.get());
+        return ResponseEntity.ok(new BoardDTO(board));
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBoard(@PathVariable Long id) {

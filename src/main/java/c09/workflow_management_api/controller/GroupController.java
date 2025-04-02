@@ -68,6 +68,7 @@ public class GroupController {
         group.setId(id);
         group.setCreated_at(groupOptional.get().getCreated_at());
         group.setCreated_by(groupOptional.get().getCreated_by());
+        group.setCreated_by_info(groupOptional.get().getCreated_by_info());
         groupService.save(group, requester);
         return new ResponseEntity<>(new GroupDTO(group), HttpStatus.OK);
     }

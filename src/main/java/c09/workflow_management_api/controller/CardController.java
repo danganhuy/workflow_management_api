@@ -8,8 +8,6 @@ import c09.workflow_management_api.util.RequestHandler;
 import jakarta.servlet.http.HttpServletRequest;
 import c09.workflow_management_api.service.card.CardService;
 import org.springframework.http.HttpStatus;
-import c09.workflow_management_api.service.list.IListService;
-import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -39,6 +37,16 @@ public class CardController {
         return ResponseEntity.ok(cards);
     }
 
+    @GetMapping("/details/{cardId}")
+    public ResponseEntity<?> getCardById(@PathVariable Long cardId) {
+        Optional<Card> cardOptional = cardService.findById(cardId);
+        if (cardOptional.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bảng không tồn tại");
+        }
+        CardDTO cardDTO = new CardDTO(cardOptional.get());
+        return ResponseEntity.ok(cardDTO);
+    }
+
     @PostMapping
     public ResponseEntity<?> createCard(@RequestBody Card card, HttpServletRequest request) {
         User user = RequestHandler.getUser(request);
@@ -58,7 +66,7 @@ public class CardController {
         Card existingCard = cardOptional.get();
         existingCard.setTitle(updatedCard.getTitle());
         existingCard.setDescription(updatedCard.getDescription());
-        existingCard.setList(updatedCard.getList());
+        existingCard.setDue_date(updatedCard.getDue_date());
 
         cardService.save(existingCard);
         return ResponseEntity.ok(new CardDTO(existingCard));
@@ -73,10 +81,6 @@ public class CardController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCard(@PathVariable Long id) {
-        Optional<Card> cardOptional = cardService.findById(id);
-        if (cardOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Card không tồn tại");
-        }
         cardService.deleteById(id);
         return ResponseEntity.ok("Card đã được xóa thành công");
     }

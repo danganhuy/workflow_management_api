@@ -68,7 +68,7 @@ public class UserController {
         if (avatar != null && !avatar.isEmpty()) {
             try {
                 String fileName = storageService.storeWithUUID(avatar);
-                user.setImagePath("/images/" + fileName);
+                user.setImagePath(fileName);
             } catch (Exception e) {
                 return ResponseEntity.internalServerError().body(Map.of(
                         "message", "Lỗi khi tải lên avatar: " + e.getMessage()

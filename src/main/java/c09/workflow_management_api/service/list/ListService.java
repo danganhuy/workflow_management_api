@@ -43,7 +43,11 @@ public class ListService implements IListService {
 
     @Override
     public void deleteById(Long id) {
-        listRepository.deleteById(id);
+        Optional<List> list = listRepository.findById(id);
+        if (list.isPresent()) {
+            list.get().setDeleted(true);
+            listRepository.save(list.get());
+        }
     }
 
     public void saveList(List list) {
@@ -82,7 +86,9 @@ public class ListService implements IListService {
     }
 
     public Set<List> findAllByBoardId(Long boardId) {
-        return listRepository.findAllByBoard_id(boardId);
+        Set<List> listSet = listRepository.findAllByBoard_id(boardId);
+        listSet.removeIf(List::getDeleted);
+        return listSet;
     }
 
 }

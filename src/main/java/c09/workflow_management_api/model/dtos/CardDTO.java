@@ -8,6 +8,7 @@ import java.time.LocalDateTime;
 @Data
 public class CardDTO {
     private Long id;
+    private Long list_id;
     private String title;
     private Integer priority;
     private String createdByName;
@@ -17,6 +18,7 @@ public class CardDTO {
 
     public CardDTO(Card card) {
         this.id = card.getId();
+        this.list_id = card.getList_id();
         this.title = card.getTitle();
         this.priority = card.getPriority();
         this.createdByName = card.getCreated_by_info().getUsername();

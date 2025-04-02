@@ -88,10 +88,6 @@ public class BoardController {
     }
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteBoard(@PathVariable Long id) {
-        Optional<Board> boardOptional = boardService.findById(id);
-        if (boardOptional.isEmpty()) {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Bảng không tồn tại");
-        }
         boardService.deleteById(id);
         return ResponseEntity.ok(id);
     }

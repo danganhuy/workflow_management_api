@@ -51,6 +51,12 @@ public class ListController {
         listService.moveList(list);
         return ResponseEntity.ok("Di chuyển danh sách thành công");
     }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<?> deleteList(@PathVariable Long id) {
+        listService.deleteById(id);
+        return ResponseEntity.ok("Xóa danh sách thành công");
+    }
 }
 
 

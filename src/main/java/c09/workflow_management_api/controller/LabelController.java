@@ -1,7 +1,7 @@
 package c09.workflow_management_api.controller;
 
 import c09.workflow_management_api.model.Label;
-import c09.workflow_management_api.model.dto.LabelDTO;
+import c09.workflow_management_api.model.dtos.LabelDTO;
 import c09.workflow_management_api.service.label.ILabelService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;

@@ -3,7 +3,7 @@ package c09.workflow_management_api.service.label;
 import c09.workflow_management_api.model.Board;
 import c09.workflow_management_api.model.Label;
 import c09.workflow_management_api.model.composite.LabelId;
-import c09.workflow_management_api.model.dto.LabelDTO;
+import c09.workflow_management_api.model.dtos.LabelDTO;
 import c09.workflow_management_api.model.type.EColor;
 import c09.workflow_management_api.repository.IBoardRepository;
 import c09.workflow_management_api.repository.ILabelRepository;
